@@ -1,0 +1,9 @@
+FROM nvcr.io/nvidia/pytorch:25.08-py3
+
+WORKDIR /app/work
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+ENV TORCH_HOME=/root/.cache/torch
+ENV PYTHONWARNINGS="ignore::UserWarning"
