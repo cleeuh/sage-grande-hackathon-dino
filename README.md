@@ -9,11 +9,18 @@ demos, from "does it load" to a multi-class classifier.
 | 1   | [Semantic Similarity](1-dino-semantic-sim)               | PCA visualization of semantic similarity of patch features. No training. |
 | 2   | [DINOv2 + MLP Classification](2-dino-mlp-classification) | Training a MLP layer on 3 classes of waste product.                      |
 
+## Pre-requisites
+
+- Linux preferably with GPU support. For hackathon Thor units will be accessible
+- Docker
+
 ## Setup environment
 
 For this project, we are using docker as our learning environment. use the `./run.sh` command to run the script to build and run the docker container. The files in this directory are mounted inside the docker container. This script can be ran on x86 or arm based devices. GPU acceleration is enabled as long as system supports it.
 
 After we are inside the containerized environment, we can run `./download_files.sh` to get our dataset, and the DinoV2 model with weights.
+
+In the event there is a permission error, try `chmod +x ./run.sh`. Same for download_files.sh `chmod +x ./download_files.sh`
 
 ## 0-basic-dino-test
 
