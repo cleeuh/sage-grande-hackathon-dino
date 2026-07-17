@@ -46,15 +46,19 @@ def build_transform_train(image_size: int) -> transforms.Compose:
 
 
 @torch.inference_mode()
-def evaluate(model: DinoClassifier, loader, device) -> float:
+def evaluate(model: DinoClassifier, loader, device) -> tuple[float, float]:
+    """Returns (accuracy, mean loss) over the loader."""
     model.eval()
+    criterion = nn.CrossEntropyLoss()
     correct = total = 0
+    loss_sum = 0.0
     for images, labels in loader:
         images, labels = images.to(device), labels.to(device)
-        preds = model(images).argmax(dim=1)
-        correct += (preds == labels).sum().item()
+        logits = model(images)
+        loss_sum += criterion(logits, labels).item() * labels.size(0)
+        correct += (logits.argmax(dim=1) == labels).sum().item()
         total += labels.numel()
-    return correct / max(total, 1)
+    return correct / max(total, 1), loss_sum / max(total, 1)
 
 
 def train_model(model: DinoClassifier, train_loader, val_loader, classes, device) -> float:
@@ -82,8 +86,8 @@ def train_model(model: DinoClassifier, train_loader, val_loader, classes, device
             running += loss.item() * labels.size(0)  # sum loss over samples (xN) for the epoch average
 
         train_loss = running / len(train_loader.dataset)
-        val_acc = evaluate(model, val_loader, device)
-        print(f"epoch {epoch:3d}  train_loss {train_loss:.4f}  val_acc {val_acc:.4f}")
+        val_acc, val_loss = evaluate(model, val_loader, device)
+        print(f"epoch {epoch:3d}  train_loss {train_loss:.4f}  val_loss {val_loss:.4f}  val_acc {val_acc:.4f}")
 
         if val_acc >= best_acc:
             best_acc = val_acc
@@ -117,7 +121,7 @@ def main() -> None:
 
     # final test accuracy using the best saved weights.
     model.head.load_state_dict(torch.load(OUT, map_location=device)["state_dict"])
-    test_acc = evaluate(model, test_loader, device)
+    test_acc, _ = evaluate(model, test_loader, device)
     print(f"Test accuracy: {test_acc:.4f}")
 
 
