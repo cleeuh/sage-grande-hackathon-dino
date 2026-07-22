@@ -6,7 +6,7 @@ cd "$(dirname "$0")"
 IMAGE="dinov2-demo"
 
 GPU_FLAG=()
-if docker info 2>/dev/null |g rep -qi 'Runtimes.*nvidia'; then
+if docker info 2>/dev/null | grep -qi 'Runtimes.*nvidia'; then
   GPU_FLAG=(--runtime nvidia)
   echo "GPU: enabled (--runtime nvidia)"
 else

@@ -16,7 +16,7 @@ demos, from "does it load" to a multi-class classifier.
 
 ## Setup environment
 
-For this project, we are using docker as our learning environment. use the `./run.sh` command to run the script to build and run the docker container. The files in this directory are mounted inside the docker container. This script can be ran on x86 or arm based devices. GPU acceleration is enabled as long as system supports it.
+For this project, we are using docker as our learning environment. use the `./run.sh` (if running on the Sage Thors, use `run_thor.sh`) command to run the script to build and run the docker container. The files in this directory are mounted inside the docker container. This script can be ran on x86 or arm based devices. GPU acceleration is enabled as long as system supports it.
 
 After we are inside the containerized environment, we can run `./download_files.sh` to get our dataset, and the DinoV2 model with weights.
 
